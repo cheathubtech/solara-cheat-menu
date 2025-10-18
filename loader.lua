@@ -1,7 +1,7 @@
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/cheathubtech/solara-cheat-menu/main/rayfield.lua'))()
 
 local Window = Rayfield:CreateWindow({
-	Name = "Rayfield Example Window",
+	Name = "SOLARA CHEAT MENU",
 	LoadingTitle = "Rayfield Interface Suite",
 	LoadingSubtitle = "by Sirius",
 	ConfigurationSaving = {
