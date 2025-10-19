@@ -10205,7 +10205,7 @@ end
 ar.UIElements.BackgroundGradient=ai.NewRoundFrame(ar.UICorner,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 Parent=ar.UIElements.Main.Background,
-ImageTransparency=ar.Transparent and aq.WindUI.TransparencyValue or 0
+ImageTransparency=ar.Transparent and aq.WindUI.TransparencyValue or 0.5
 },{
 l
 })
@@ -10397,7 +10397,7 @@ task.wait(.06)
 ar.Closed=false
 
 ak(ar.UIElements.Main.Background,0.2,{
-ImageTransparency=ar.Transparent and aq.WindUI.TransparencyValue or 0,
+ImageTransparency=ar.Transparent and aq.WindUI.TransparencyValue or 0.5,
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
 if ar.UIElements.BackgroundGradient then
@@ -10552,7 +10552,7 @@ function ar.ToggleTransparency(p,r)
 ar.Transparent=r
 aq.WindUI.Transparent=r
 
-ar.UIElements.Main.Background.ImageTransparency=r and aq.WindUI.TransparencyValue or 0
+ar.UIElements.Main.Background.ImageTransparency=r and aq.WindUI.TransparencyValue or 0.5
 
 ar.UIElements.MainBar.Background.ImageTransparency=r and 0.97 or 0.95
 
