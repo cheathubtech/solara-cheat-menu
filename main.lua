@@ -241,11 +241,19 @@ local MainSection = Tabs.Main:Section({
     Opened = true,
 })
 
--- Speed Control
+-- Speed Control Section
+local SpeedSection = MainSection:Section({
+    Title = "Speed Control",
+    Icon = "zap",
+    Opened = true,
+})
+
 local speedEnabled = false
 local originalSpeed = 16
+local speedSlider
+local resetButton
 
-MainSection:Toggle({
+SpeedSection:Toggle({
     Title = "Speed Hack",
     Desc = "Enable/Disable speed modification",
     Value = false,
@@ -256,6 +264,8 @@ MainSection:Toggle({
         if char and char:FindFirstChild("Humanoid") then
             if state then
                 char.Humanoid.WalkSpeed = 50 -- Default speed when enabled
+                speedSlider:SetVisible(true) -- Show slider
+                resetButton:SetVisible(true) -- Show reset button
                 WindUI:Notify({
                     Title = "Speed Hack",
                     Content = "Speed hack enabled!",
@@ -263,6 +273,8 @@ MainSection:Toggle({
                 })
             else
                 char.Humanoid.WalkSpeed = originalSpeed
+                speedSlider:SetVisible(false) -- Hide slider
+                resetButton:SetVisible(false) -- Hide reset button
                 WindUI:Notify({
                     Title = "Speed Hack",
                     Content = "Speed hack disabled!",
@@ -273,7 +285,7 @@ MainSection:Toggle({
     end,
 })
 
-MainSection:Slider({
+speedSlider = SpeedSection:Slider({
     Title = "Speed Value",
     Desc = "Adjust your walking speed",
     Value = { Min = 16, Max = 500, Default = 50 },
@@ -288,21 +300,34 @@ MainSection:Slider({
     end,
 })
 
-MainSection:Button({
+resetButton = SpeedSection:Button({
     Title = "Reset Speed",
     Icon = "refresh-cw",
     Callback = function()
-        local char = game.Players.LocalPlayer.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.WalkSpeed = originalSpeed
+        if speedEnabled then
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChild("Humanoid") then
+                char.Humanoid.WalkSpeed = originalSpeed
+                speedSlider:Set(originalSpeed) -- Reset slider to default value
+                WindUI:Notify({
+                    Title = "Speed Reset",
+                    Content = "Speed reset to default!",
+                    Icon = "refresh-cw"
+                })
+            end
+        else
             WindUI:Notify({
-                Title = "Speed Reset",
-                Content = "Speed reset to default!",
-                Icon = "refresh-cw"
+                Title = "Speed Hack",
+                Content = "Please enable Speed Hack first!",
+                Icon = "alert-circle"
             })
         end
     end,
 })
+
+-- Initially hide slider and reset button
+speedSlider:SetVisible(false)
+resetButton:SetVisible(false)
 
 -- Only Speed Control remains
 
