@@ -11109,9 +11109,9 @@ Creator=a.load'a',
 LocalizationModule=a.load'b',
 NotificationModule=a.load'c',
 Themes=nil,
-Transparent=false,
+Transparent=true,
 
-TransparencyValue=.15,
+TransparencyValue=.25,
 
 UIScale=1,
 
