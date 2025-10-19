@@ -215,7 +215,7 @@ end
 -- Rayfield библиотека загружается отдельно
 
 -- Создаем окно
-local Window = Rayfield:CreateWindow({
+local Window = RayfieldLibrary:CreateWindow({
     Name = "SOLARA CHEAT MENU",
     LoadingTitle = "SOLARA Interface Suite",
     LoadingSubtitle = "by Your Name",
@@ -228,7 +228,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 -- Уведомление
-Rayfield:Notify("SOLARA LOADED", "Cheat menu loaded successfully!", 4483362458)
+RayfieldLibrary:Notify("SOLARA LOADED", "Cheat menu loaded successfully!", 4483362458)
 
 -- Вкладка Движение
 local MovementTab = Window:CreateTab("Movement", 4483362458)
@@ -336,7 +336,7 @@ local InfoParagraph = SettingsTab:CreateParagraph({
 local DestroyButton = SettingsTab:CreateButton({
     Name = "Destroy UI",
     Callback = function()
-        Rayfield:Destroy()
+        RayfieldLibrary:Destroy()
     end,
 })
 
