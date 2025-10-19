@@ -1,6 +1,12 @@
 -- This is just an example.
 
-local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/cheathubtech/solara-cheat-menu/main/library.lua"))()
+local success, WindUI = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/cheathubtech/solara-cheat-menu/main/library.lua"))()
+end)
+
+if not success then
+    error("Failed to load WindUI library: " .. tostring(WindUI))
+end
 
 local Localization = WindUI:Localization({
     Enabled = true,
@@ -131,15 +137,15 @@ local Window = WindUI:CreateWindow({
     SideBarWidth = 200,
     
     OpenButton = {
-        Title = "Open .ftgs hub UI", -- can be changed
+        Title = "Open W-Hub", -- can be changed
         CornerRadius = UDim.new(1,0), -- fully rounded
         StrokeThickness = 3, -- removing outline
         Enabled = true, -- enable or disable openbutton
         OnlyMobile = false,
         
         Color = ColorSequence.new( -- gradient
-            Color3.fromHex("#30FF6A"), 
-            Color3.fromHex("#e7ff2f")
+            Color3.fromHex("#E8E8E8"), 
+            Color3.fromHex("#B0B0B0")
         ),
     
         -- Draggable = false,
@@ -229,8 +235,11 @@ local Sections = {
 
 local Tabs = {
     Main = Sections.Main:Tab({ Title = "loc:MAIN", Icon = "house", Desc = "Main hub features" }),
+    Automation = Sections.Main:Tab({ Title = "Automation", Icon = "zap", Desc = "Automated features" }),
+    Visuals = Sections.Main:Tab({ Title = "Visuals", Icon = "eye", Desc = "Visual effects and enhancements" }),
+    Misc = Sections.Main:Tab({ Title = "Misc", Icon = "puzzle", Desc = "Miscellaneous features" }),
+    Appearance = Sections.Main:Tab({ Title = "loc:APPEARANCE", Icon = "brush" }),
     Elements = Sections.Settings:Tab({ Title = "loc:UI_ELEMENTS", Icon = "layout-grid", Desc = "UI Elements Example" }),
-    Appearance = Sections.Settings:Tab({ Title = "loc:APPEARANCE", Icon = "brush" }),
     Config = Sections.Utilities:Tab({ Title = "loc:CONFIGURATION", Icon = "settings" }),
 }
 
@@ -241,19 +250,95 @@ local MainSection = Tabs.Main:Section({
     Opened = true,
 })
 
--- Speed Control Section
-local SpeedSection = MainSection:Section({
-    Title = "Speed Control",
+-- Automation Tab Content
+local AutomationSection = Tabs.Automation:Section({
+    Title = "Automation Features",
     Icon = "zap",
     Opened = true,
 })
 
+-- Visuals Tab Content
+local VisualsSection = Tabs.Visuals:Section({
+    Title = "Visual Effects",
+    Icon = "eye",
+    Opened = true,
+})
+
+
+-- Misc Tab Content
+local MiscSection = Tabs.Misc:Section({
+    Title = "Miscellaneous Features",
+    Icon = "puzzle",
+    Opened = true,
+})
+
+-- Anti AFK System
+local antiAFKEnabled = false
+local antiAFKConnection
+local originalIdleTime
+
+local function enableAntiAFK()
+    if antiAFKConnection then
+        antiAFKConnection:Disconnect()
+    end
+    
+    -- Save original idle time
+    originalIdleTime = game:GetService("Players").LocalPlayer.IdleTime
+    
+    antiAFKConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if antiAFKEnabled then
+            -- Reset idle time to prevent AFK kick
+            game:GetService("Players").LocalPlayer.IdleTime = 0
+        end
+    end)
+end
+
+local function disableAntiAFK()
+    if antiAFKConnection then
+        antiAFKConnection:Disconnect()
+        antiAFKConnection = nil
+    end
+    
+    -- Restore original idle time behavior
+    if originalIdleTime then
+        game:GetService("Players").LocalPlayer.IdleTime = originalIdleTime
+    end
+end
+
+MiscSection:Toggle({
+    Title = "Anti AFK",
+    Desc = "Prevents you from being kicked for inactivity",
+    Value = false,
+    Flag = "anti_afk",
+    Callback = function(state)
+        antiAFKEnabled = state
+        if state then
+            enableAntiAFK()
+            WindUI:Notify({
+                Title = "Anti AFK",
+                Content = "Anti AFK enabled!",
+                Icon = "shield-check",
+                Duration = 3
+            })
+        else
+            disableAntiAFK()
+            WindUI:Notify({
+                Title = "Anti AFK",
+                Content = "Anti AFK disabled!",
+                Icon = "shield-x",
+                Duration = 3
+            })
+        end
+    end,
+})
+
+-- Speed Control
 local speedEnabled = false
 local originalSpeed = 16
 local speedSlider
 local resetButton
 
-SpeedSection:Toggle({
+MainSection:Toggle({
     Title = "Speed Hack",
     Desc = "Enable/Disable speed modification",
     Value = false,
@@ -264,8 +349,6 @@ SpeedSection:Toggle({
         if char and char:FindFirstChild("Humanoid") then
             if state then
                 char.Humanoid.WalkSpeed = 50 -- Default speed when enabled
-                speedSlider:SetVisible(true) -- Show slider
-                resetButton:SetVisible(true) -- Show reset button
                 WindUI:Notify({
                     Title = "Speed Hack",
                     Content = "Speed hack enabled!",
@@ -273,8 +356,6 @@ SpeedSection:Toggle({
                 })
             else
                 char.Humanoid.WalkSpeed = originalSpeed
-                speedSlider:SetVisible(false) -- Hide slider
-                resetButton:SetVisible(false) -- Hide reset button
                 WindUI:Notify({
                     Title = "Speed Hack",
                     Content = "Speed hack disabled!",
@@ -285,9 +366,9 @@ SpeedSection:Toggle({
     end,
 })
 
-speedSlider = SpeedSection:Slider({
+speedSlider = MainSection:Slider({
     Title = "Speed Value",
-    Desc = "Adjust your walking speed",
+    Desc = "Adjust your walking speed (16-500)",
     Value = { Min = 16, Max = 500, Default = 50 },
     Flag = "speed_value",
     Callback = function(value)
@@ -295,12 +376,13 @@ speedSlider = SpeedSection:Slider({
             local char = game.Players.LocalPlayer.Character
             if char and char:FindFirstChild("Humanoid") then
                 char.Humanoid.WalkSpeed = value
+                print("Speed set to:", value) -- Debug message
             end
         end
     end,
 })
 
-resetButton = SpeedSection:Button({
+resetButton = MainSection:Button({
     Title = "Reset Speed",
     Icon = "refresh-cw",
     Callback = function()
@@ -325,11 +407,460 @@ resetButton = SpeedSection:Button({
     end,
 })
 
--- Initially hide slider and reset button
-speedSlider:SetVisible(false)
-resetButton:SetVisible(false)
+-- Infinite Jump Control
+local infiniteJumpEnabled = false
+local infiniteJumpConnection
 
--- Only Speed Control remains
+MainSection:Toggle({
+    Title = "Infinite Jump",
+    Desc = "Enable/Disable infinite jumping",
+    Value = false,
+    Flag = "infinite_jump",
+    Callback = function(state)
+        infiniteJumpEnabled = state
+        
+        if state then
+            -- Enable Infinite Jump
+            infiniteJumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
+                if infiniteJumpEnabled then
+                    local char = game.Players.LocalPlayer.Character
+                    if char and char:FindFirstChild("Humanoid") then
+                        char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                end
+            end)
+            
+            WindUI:Notify({
+                Title = "Infinite Jump",
+                Content = "Infinite jump enabled!",
+                Icon = "arrow-up"
+            })
+        else
+            -- Disable Infinite Jump
+            if infiniteJumpConnection then
+                infiniteJumpConnection:Disconnect()
+                infiniteJumpConnection = nil
+            end
+            
+            WindUI:Notify({
+                Title = "Infinite Jump",
+                Content = "Infinite jump disabled!",
+                Icon = "arrow-up"
+            })
+        end
+    end,
+})
+
+-- NoClip Control
+local noclipEnabled = false
+local noclipConnection
+
+local function noclipParts(char)
+    if char then
+        for _, part in pairs(char:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end
+
+local function restoreParts(char)
+    if char then
+        for _, part in pairs(char:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+    end
+end
+
+MainSection:Toggle({
+    Title = "NoClip",
+    Desc = "Enable/Disable noclip (walk through walls)",
+    Value = false,
+    Flag = "noclip",
+    Callback = function(state)
+        noclipEnabled = state
+        local char = game.Players.LocalPlayer.Character
+        
+        if state then
+            -- Enable NoClip
+            noclipParts(char)
+            
+            -- Start noclip loop
+            noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                if noclipEnabled then
+                    local currentChar = game.Players.LocalPlayer.Character
+                    if currentChar then
+                        noclipParts(currentChar)
+                    end
+                end
+            end)
+            
+            WindUI:Notify({
+                Title = "NoClip",
+                Content = "NoClip enabled!",
+                Icon = "shield"
+            })
+        else
+            -- Disable NoClip
+            if noclipConnection then
+                noclipConnection:Disconnect()
+                noclipConnection = nil
+            end
+            
+            restoreParts(char)
+            
+            WindUI:Notify({
+                Title = "NoClip",
+                Content = "NoClip disabled!",
+                Icon = "shield"
+            })
+        end
+    end,
+})
+
+-- Auto-disable noclip, infinite jump, auto collect, fly and auto door lock when character respawns
+game.Players.LocalPlayer.CharacterAdded:Connect(function(newChar)
+    -- Disable NoClip
+    if noclipEnabled then
+        noclipEnabled = false
+        if noclipConnection then
+            noclipConnection:Disconnect()
+            noclipConnection = nil
+        end
+        restoreParts(newChar)
+    end
+    
+    -- Disable Infinite Jump
+    if infiniteJumpEnabled then
+        infiniteJumpEnabled = false
+        if infiniteJumpConnection then
+            infiniteJumpConnection:Disconnect()
+            infiniteJumpConnection = nil
+        end
+    end
+    
+    -- Disable Auto Collect
+    if autoCollectEnabled then
+        autoCollectEnabled = false
+        if autoCollectConnection then
+            autoCollectConnection:Disconnect()
+            autoCollectConnection = nil
+        end
+    end
+    
+    -- Disable Fly
+    if flyEnabled then
+        flyEnabled = false
+    end
+    
+    -- Disable Anti AFK
+    if antiAFKEnabled then
+        antiAFKEnabled = false
+        disableAntiAFK()
+    end
+    
+    
+    
+    -- Wait a bit then restore animations
+    wait(0.7)
+    game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
+    game.Players.LocalPlayer.Character.Animate.Disabled = false
+end)
+
+
+
+
+
+-- Fly System (Exact copy from original)
+local flyEnabled = false
+local flySpeed = 1
+local tpwalking = false
+local speaker = game:GetService("Players").LocalPlayer
+
+-- Fly Toggle (Exact copy from original)
+MainSection:Toggle({
+    Title = "Fly",
+    Desc = "Enable/Disable flying",
+    Value = false,
+    Flag = "fly_enabled",
+    Callback = function(state)
+        if state then
+            flyEnabled = true
+            
+            -- Start tpwalking loops
+            for i = 1, flySpeed do
+                spawn(function()
+                    local hb = game:GetService("RunService").Heartbeat
+                    tpwalking = true
+                    local chr = game.Players.LocalPlayer.Character
+                    local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+                    while tpwalking and hb:Wait() and chr and hum and hum.Parent do
+                        if hum.MoveDirection.Magnitude > 0 then
+                            chr:TranslateBy(hum.MoveDirection)
+                        end
+                    end
+                end)
+            end
+            
+            -- Disable animations
+            game.Players.LocalPlayer.Character.Animate.Disabled = true
+            local Char = game.Players.LocalPlayer.Character
+            local Hum = Char:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+            
+            for i,v in next, Hum:GetPlayingAnimationTracks() do
+                v:AdjustSpeed(0)
+            end
+            
+            -- Disable humanoid states
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Flying,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Landed,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.RunningNoPhysics,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.StrafingNoPhysics,false)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming,false)
+            speaker.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Swimming)
+            
+            -- R6/R15 Fly Logic (exact copy from original)
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+                local plr = game.Players.LocalPlayer
+                local torso = plr.Character.Torso
+                local flying = true
+                local deb = true
+                local ctrl = {f = 0, b = 0, l = 0, r = 0}
+                local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+                local maxspeed = 50
+                local speed = 0
+
+                local bg = Instance.new("BodyGyro", torso)
+                bg.P = 9e4
+                bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+                bg.cframe = torso.CFrame
+                local bv = Instance.new("BodyVelocity", torso)
+                bv.velocity = Vector3.new(0,0.1,0)
+                bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+                if flyEnabled == true then
+                    plr.Character.Humanoid.PlatformStand = true
+                end
+                
+                spawn(function()
+                    while flyEnabled == true do
+                        game:GetService("RunService").RenderStepped:Wait()
+
+                        if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
+                            speed = speed+.5+(speed/maxspeed)
+                            if speed > maxspeed then
+                                speed = maxspeed
+                            end
+                        elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
+                            speed = speed-1
+                            if speed < 0 then
+                                speed = 0
+                            end
+                        end
+                        if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+                            bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
+                            lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+                        elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
+                            bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
+                        else
+                            bv.velocity = Vector3.new(0,0,0)
+                        end
+                        bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0)
+                    end
+                    ctrl = {f = 0, b = 0, l = 0, r = 0}
+                    lastctrl = {f = 0, b = 0, l = 0, r = 0}
+                    speed = 0
+                    bg:Destroy()
+                    bv:Destroy()
+                    plr.Character.Humanoid.PlatformStand = false
+                    game.Players.LocalPlayer.Character.Animate.Disabled = false
+                    tpwalking = false
+                end)
+            else
+                local plr = game.Players.LocalPlayer
+                local UpperTorso = plr.Character.UpperTorso
+                local flying = true
+                local deb = true
+                local ctrl = {f = 0, b = 0, l = 0, r = 0}
+                local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+                local maxspeed = 50
+                local speed = 0
+
+                local bg = Instance.new("BodyGyro", UpperTorso)
+                bg.P = 9e4
+                bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+                bg.cframe = UpperTorso.CFrame
+                local bv = Instance.new("BodyVelocity", UpperTorso)
+                bv.velocity = Vector3.new(0,0.1,0)
+                bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+                if flyEnabled == true then
+                    plr.Character.Humanoid.PlatformStand = true
+                end
+                
+                spawn(function()
+                    while flyEnabled == true do
+                        wait()
+
+                        if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
+                            speed = speed+.5+(speed/maxspeed)
+                            if speed > maxspeed then
+                                speed = maxspeed
+                            end
+                        elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
+                            speed = speed-1
+                            if speed < 0 then
+                                speed = 0
+                            end
+                        end
+                        if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+                            bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
+                            lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+                        elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
+                            bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
+                        else
+                            bv.velocity = Vector3.new(0,0,0)
+                        end
+                        bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0)
+                    end
+                    ctrl = {f = 0, b = 0, l = 0, r = 0}
+                    lastctrl = {f = 0, b = 0, l = 0, r = 0}
+                    speed = 0
+                    bg:Destroy()
+                    bv:Destroy()
+                    plr.Character.Humanoid.PlatformStand = false
+                    game.Players.LocalPlayer.Character.Animate.Disabled = false
+                    tpwalking = false
+                end)
+            end
+            
+            WindUI:Notify({
+                Title = "Fly",
+                Content = "Fly enabled!",
+                Icon = "zap"
+            })
+        else
+            flyEnabled = false
+            
+            -- Re-enable humanoid states
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Flying,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Landed,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.RunningNoPhysics,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.StrafingNoPhysics,true)
+            speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming,true)
+            speaker.Character.Humanoid:ChangeState(Enum.HumanoidStateType.RunningNoPhysics)
+            
+            WindUI:Notify({
+                Title = "Fly",
+                Content = "Fly disabled!",
+                Icon = "zap"
+            })
+        end
+    end,
+})
+
+-- Fly Speed Control (Exact copy from original)
+MainSection:Slider({
+    Title = "Fly Speed",
+    Desc = "Adjust fly speed (1-10)",
+    Value = { Min = 1, Max = 10, Default = 1 },
+    Flag = "fly_speed",
+    Callback = function(value)
+        flySpeed = value
+        if flyEnabled == true then
+            tpwalking = false
+            for i = 1, flySpeed do
+                spawn(function()
+                    local hb = game:GetService("RunService").Heartbeat
+                    tpwalking = true
+                    local chr = game.Players.LocalPlayer.Character
+                    local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+                    while tpwalking and hb:Wait() and chr and hum and hum.Parent do
+                        if hum.MoveDirection.Magnitude > 0 then
+                            chr:TranslateBy(hum.MoveDirection)
+                        end
+                    end
+                end)
+            end
+        end
+    end,
+})
+
+
+-- Teleport to Player
+local function getPlayerList()
+    local players = {}
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            table.insert(players, player.Name)
+        end
+    end
+    return players
+end
+
+local teleportPlayer = ""
+MainSection:Dropdown({
+    Title = "Teleport to Player",
+    Desc = "Select player to teleport to them",
+    Values = getPlayerList(),
+    Value = "",
+    Flag = "teleport_player",
+    Callback = function(value)
+        teleportPlayer = value
+        if value and value ~= "" then
+            local targetPlayer = game.Players:FindFirstChild(value)
+            if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local char = game.Players.LocalPlayer.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    char.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+                    WindUI:Notify({
+                        Title = "Teleport",
+                        Content = "Teleported to " .. value .. "!",
+                        Icon = "user"
+                    })
+                end
+            else
+                WindUI:Notify({
+                    Title = "Error",
+                    Content = "Player not found!",
+                    Icon = "alert-circle"
+                })
+            end
+        end
+    end,
+})
+
+
+
+
+
+
+
+
+
+
+-- Slider and button are always visible now
 
 -- Elements Tab Content
 Tabs.Elements:Section({
@@ -522,13 +1053,6 @@ ElementsSection:Code({
     end
 })
 
-Tabs.Appearance:Paragraph({
-    Title = "Customize Interface",
-    Desc = "Personalize your experience",
-    Image = "palette",
-    ImageSize = 20,
-    Color = "White"
-})
 
 local themes = {}
 for themeName, _ in pairs(WindUI:GetThemes()) do
@@ -597,22 +1121,7 @@ WindUI:OnThemeChange(function(theme)
 end)
 
 
-Tabs.Appearance:Button({
-    Title = "Create New Theme",
-    Icon = "plus",
-    Callback = function()
-        Window:Dialog({
-            Title = "Create Theme",
-            Content = "This feature is coming soon!",
-            Buttons = {
-                {
-                    Title = "OK",
-                    Variant = "Primary"
-                }
-            }
-        })
-    end
-})
+
 
 Tabs.Config:Paragraph({
     Title = "Configuration Manager",
@@ -816,4 +1325,5 @@ if Window:GetUnlocked() and #Window:GetUnlocked() > 0 then
         print("- " .. (title or "Unknown"))
     end
     
-end
+    
+end -- Close the if Window:GetUnlocked() block
