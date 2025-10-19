@@ -11,8 +11,8 @@ if not success then
 end
 
 -- Load our modules
-local Utils = require(script.Parent.utils)
-local Functions = require(script.Parent.functions)
+local Utils = loadstring(readfile("utils.lua"))()
+local Functions = loadstring(readfile("functions.lua"))()
 
 -- Initialize WindUI settings
 WindUI.TransparencyValue = 0.2
