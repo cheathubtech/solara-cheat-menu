@@ -2889,14 +2889,14 @@ return{
 Dark={
 Name="Dark",
 
-Accent=Color3.fromHex"#18181b",
-Dialog=Color3.fromHex"#161616",
+Accent=Color3.fromHex"#0a0a0c",
+Dialog=Color3.fromHex"#0c0c0c",
 Outline=Color3.fromHex"#FFFFFF",
 Text=Color3.fromHex"#FFFFFF",
-Placeholder=Color3.fromHex"#7a7a7a",
-Background=Color3.fromHex"#101010",
-Button=Color3.fromHex"#52525b",
-Icon=Color3.fromHex"#a1a1aa"
+Placeholder=Color3.fromHex"#5a5a5a",
+Background=Color3.fromHex"#050505",
+Button=Color3.fromHex"#32323b",
+Icon=Color3.fromHex"#818188"
 },
 Light={
 Name="Light",
