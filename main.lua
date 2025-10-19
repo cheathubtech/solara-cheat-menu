@@ -281,7 +281,7 @@ MainSection:Toggle({
 MainSection:Slider({
     Title = "Speed Value",
     Desc = "Adjust your walking speed",
-    Value = { Min = 16, Max = 200, Default = 50 },
+    Value = { Min = 16, Max = 500, Default = 50 },
     Flag = "speed_value",
     Callback = function(value)
         if speedEnabled then
@@ -309,83 +309,7 @@ MainSection:Button({
     end,
 })
 
--- Jump Power Control
-local jumpEnabled = false
-local originalJump = 50
-
-MainSection:Toggle({
-    Title = "Jump Hack",
-    Desc = "Enable/Disable jump power modification",
-    Value = false,
-    Flag = "jump_enabled",
-    Callback = function(state)
-        jumpEnabled = state
-        local char = game.Players.LocalPlayer.Character
-        if char and char:FindFirstChild("Humanoid") then
-            if state then
-                char.Humanoid.JumpPower = 100 -- Default jump when enabled
-                WindUI:Notify({
-                    Title = "Jump Hack",
-                    Content = "Jump hack enabled!",
-                    Icon = "arrow-up"
-                })
-            else
-                char.Humanoid.JumpPower = originalJump
-                WindUI:Notify({
-                    Title = "Jump Hack",
-                    Content = "Jump hack disabled!",
-                    Icon = "arrow-up"
-                })
-            end
-        end
-    end,
-})
-
-MainSection:Slider({
-    Title = "Jump Power",
-    Desc = "Adjust your jump power",
-    Value = { Min = 50, Max = 200, Default = 100 },
-    Flag = "jump_value",
-    Callback = function(value)
-        if jumpEnabled then
-            local char = game.Players.LocalPlayer.Character
-            if char and char:FindFirstChild("Humanoid") then
-                char.Humanoid.JumpPower = value
-            end
-        end
-    end,
-})
-
-MainSection:Button({
-    Title = "Reset Jump",
-    Icon = "refresh-cw",
-    Callback = function()
-        local char = game.Players.LocalPlayer.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.JumpPower = originalJump
-            WindUI:Notify({
-                Title = "Jump Reset",
-                Content = "Jump power reset to default!",
-                Icon = "refresh-cw"
-            })
-        end
-    end,
-})
-
--- ESP
-MainSection:Toggle({
-    Title = "Player ESP",
-    Desc = "Show ESP for other players",
-    Value = false,
-    Flag = "esp",
-    Callback = function(state)
-        WindUI:Notify({
-            Title = "ESP",
-            Content = state and "ESP Enabled!" or "ESP Disabled!",
-            Icon = state and "eye" or "eye-off"
-        })
-    end,
-})
+-- Only Speed Control remains
 
 -- Elements Tab Content
 Tabs.Elements:Section({
