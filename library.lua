@@ -9444,23 +9444,23 @@ av, aw=ag.AcrylicPaint{UseAcrylic=ar.Acrylic}
 ar.AcrylicPaint=av
 end
 
--- local av=aj("Frame",{
--- Size=UDim2.new(0,32,0,32),
--- Position=UDim2.new(1,0,1,0),
--- AnchorPoint=Vector2.new(.5,.5),
--- BackgroundTransparency=1,
--- ZIndex=99,
--- Active=true
--- },{
--- aj("ImageLabel",{
--- Size=UDim2.new(0,96,0,96),
--- BackgroundTransparency=1,
--- Image="rbxassetid://120997033468887",
--- Position=UDim2.new(0.5,-16,0.5,-16),
--- AnchorPoint=Vector2.new(0.5,0.5),
--- ImageTransparency=1,
--- })
--- })
+local av=aj("Frame",{
+Size=UDim2.new(0,32,0,32),
+Position=UDim2.new(1,0,1,0),
+AnchorPoint=Vector2.new(.5,.5),
+BackgroundTransparency=1,
+ZIndex=99,
+Active=true
+},{
+aj("ImageLabel",{
+Size=UDim2.new(0,96,0,96),
+BackgroundTransparency=1,
+Image="rbxassetid://120997033468887",
+Position=UDim2.new(0.5,-16,0.5,-16),
+AnchorPoint=Vector2.new(0.5,0.5),
+ImageTransparency=1,
+})
+})
 local aw=ai.NewRoundFrame(ar.UICorner,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=1,
@@ -9488,8 +9488,9 @@ ZIndex=999,
 Active=false,
 })
 
-
-
+av.Parent=ar.UIElements.Main
+aw.Parent=av
+ax.Parent=ar.UIElements.Main
 
 
 
@@ -10963,9 +10964,9 @@ end
 
 ai.AddSignal(av.InputBegan,function(A)
 if A.UserInputType==Enum.UserInputType.MouseButton1 or A.UserInputType==Enum.UserInputType.Touch then
-if ar.CanResize then
-startResizing(A)
-end
+-- if ar.CanResize then
+-- startResizing(A)
+-- end
 end
 end)
 
