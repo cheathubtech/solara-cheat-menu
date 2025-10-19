@@ -8,9 +8,9 @@ local Localization = WindUI:Localization({
     DefaultLanguage = "en",
     Translations = {
         ["en"] = {
-            ["WINDUI_EXAMPLE"] = "WindUI Example",
-            ["WELCOME"] = "Welcome to WindUI!",
-            ["LIB_DESC"] = "Beautiful UI library for Roblox",
+            ["WINDUI_EXAMPLE"] = "W-Hub",
+            ["WELCOME"] = "Welcome to W-Hub!",
+            ["LIB_DESC"] = "Your ultimate Roblox utility hub",
             ["SETTINGS"] = "Settings",
             ["APPEARANCE"] = "Appearance",
             ["FEATURES"] = "Features",
@@ -43,9 +43,9 @@ local function gradient(text, startColor, endColor)
 end
 
 WindUI:Popup({
-    Title = gradient("WindUI Demo", Color3.fromHex("#6A11CB"), Color3.fromHex("#2575FC")),
+    Title = gradient("W-Hub", Color3.fromHex("#6A11CB"), Color3.fromHex("#2575FC")),
     Icon = "sparkles",
-    Content = "loc:LIB_DESC",
+    Content = "Your ultimate Roblox utility hub!",
     Buttons = {
         {
             Title = "Get Started",
@@ -98,9 +98,8 @@ WindUI.Services.mysuperservicetogetkey = {
 
 local Window = WindUI:CreateWindow({
     Title = "loc:WINDUI_EXAMPLE",
-    Icon = "geist:window",
     Author = "loc:WELCOME",
-    Folder = "WindUI_Example",
+    Folder = "W-Hub",
     Size = UDim2.fromOffset(580, 490),
     Theme = "Dark",
     
@@ -204,47 +203,12 @@ Window.User:SetAnonymous(true)
 
 
 
-Window:SetIconSize(48)
+-- Icon size removed since no icon is used
 
-Window:Tag({
-    Title = "v1.6.4",
-    Color = Color3.fromHex("#30ff6a")
-})
-Window:Tag({
-    Title = "Beta",
-    Color = Color3.fromHex("#315dff")
-})
-local TimeTag = Window:Tag({
-    Title = "--:--",
-    Radius = 0,
-    --Color = Color3.fromHex("#000000"),
-    Color = WindUI:Gradient({
-        ["0"]   = { Color = Color3.fromHex("#FF0F7B"), Transparency = 0 },
-        ["100"] = { Color = Color3.fromHex("#F89B29"), Transparency = 0 },
-    }, {
-        Rotation = 45,
-    }),
-})
+-- Tags removed for cleaner look
 
 
-local hue = 0
-
--- Rainbow effect & Time 
-task.spawn(function()
-	while true do
-		local now = os.date("*t")
-		local hours = string.format("%02d", now.hour)
-		local minutes = string.format("%02d", now.min)
-		
-		hue = (hue + 0.01) % 1
-		local color = Color3.fromHSV(hue, 1, 1)
-		
-		TimeTag:SetTitle(hours .. ":" .. minutes)
-		--TimeTag:SetColor(color)
-
-		task.wait(0.06)
-	end
-end)
+-- Time display removed for cleaner look
 
 
 Window:CreateTopbarButton("theme-switcher", "moon", function()
