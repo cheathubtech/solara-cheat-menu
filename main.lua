@@ -246,17 +246,11 @@ local MainSection = Tabs.Main:Section({
     Opened = true,
 })
 
--- Speed Control Section
-local SpeedSection = MainSection:Section({
-    Title = "Speed Control",
-    Icon = "zap",
-    Opened = true,
-})
-
+-- Speed Control
 local speedEnabled = false
 local originalSpeed = 16
 
-SpeedSection:Toggle({
+MainSection:Toggle({
     Title = "Speed Hack",
     Desc = "Enable/Disable speed modification",
     Value = false,
@@ -284,7 +278,7 @@ SpeedSection:Toggle({
     end,
 })
 
-SpeedSection:Slider({
+MainSection:Slider({
     Title = "Speed Value",
     Desc = "Adjust your walking speed",
     Value = { Min = 16, Max = 200, Default = 50 },
@@ -299,7 +293,7 @@ SpeedSection:Slider({
     end,
 })
 
-SpeedSection:Button({
+MainSection:Button({
     Title = "Reset Speed",
     Icon = "refresh-cw",
     Callback = function()
@@ -315,17 +309,11 @@ SpeedSection:Button({
     end,
 })
 
--- Jump Power Control Section
-local JumpSection = MainSection:Section({
-    Title = "Jump Power Control",
-    Icon = "arrow-up",
-    Opened = true,
-})
-
+-- Jump Power Control
 local jumpEnabled = false
 local originalJump = 50
 
-JumpSection:Toggle({
+MainSection:Toggle({
     Title = "Jump Hack",
     Desc = "Enable/Disable jump power modification",
     Value = false,
@@ -353,7 +341,7 @@ JumpSection:Toggle({
     end,
 })
 
-JumpSection:Slider({
+MainSection:Slider({
     Title = "Jump Power",
     Desc = "Adjust your jump power",
     Value = { Min = 50, Max = 200, Default = 100 },
@@ -368,7 +356,7 @@ JumpSection:Slider({
     end,
 })
 
-JumpSection:Button({
+MainSection:Button({
     Title = "Reset Jump",
     Icon = "refresh-cw",
     Callback = function()
@@ -384,14 +372,8 @@ JumpSection:Button({
     end,
 })
 
--- ESP Section
-local ESPSection = MainSection:Section({
-    Title = "Visual Features",
-    Icon = "eye",
-    Opened = true,
-})
-
-ESPSection:Toggle({
+-- ESP
+MainSection:Toggle({
     Title = "Player ESP",
     Desc = "Show ESP for other players",
     Value = false,
