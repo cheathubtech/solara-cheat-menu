@@ -287,9 +287,7 @@ SpeedSection:Toggle({
 SpeedSection:Slider({
     Title = "Speed Value",
     Desc = "Adjust your walking speed",
-    Min = 16,
-    Max = 200,
-    Value = 50,
+    Value = { Min = 16, Max = 200, Default = 50 },
     Flag = "speed_value",
     Callback = function(value)
         if speedEnabled then
@@ -358,9 +356,7 @@ JumpSection:Toggle({
 JumpSection:Slider({
     Title = "Jump Power",
     Desc = "Adjust your jump power",
-    Min = 50,
-    Max = 200,
-    Value = 100,
+    Value = { Min = 50, Max = 200, Default = 100 },
     Flag = "jump_value",
     Callback = function(value)
         if jumpEnabled then
