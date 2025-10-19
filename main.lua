@@ -15,6 +15,7 @@ local Localization = WindUI:Localization({
             ["APPEARANCE"] = "Appearance",
             ["FEATURES"] = "Features",
             ["UTILITIES"] = "Utilities",
+            ["MAIN"] = "Main",
             ["UI_ELEMENTS"] = "UI Elements",
             ["CONFIGURATION"] = "Configuration",
             ["SAVE_CONFIG"] = "Save Configuration",
@@ -227,6 +228,7 @@ local Sections = {
 }
 
 local Tabs = {
+    Main = Sections.Main:Tab({ Title = "loc:MAIN", Icon = "house", Desc = "Main hub features" }),
     Elements = Sections.Main:Tab({ Title = "loc:UI_ELEMENTS", Icon = "layout-grid", Desc = "UI Elements Example" }),
     Appearance = Sections.Settings:Tab({ Title = "loc:APPEARANCE", Icon = "brush" }),
     Config = Sections.Utilities:Tab({ Title = "loc:CONFIGURATION", Icon = "settings" }),
@@ -237,14 +239,64 @@ local Tabs = {
     LockedTab5 = Window:Tab({ Title = "loc:LOCKED_TAB", Icon = "bird", Locked = true, }),
 }
 
--- Tabs.Elements:Paragraph({
---     Title = "Interactive Components",
---     Desc = "Explore WindUI's powerful elements",
---     Image = "component",
---     ImageSize = 20,
---     Color = Color3.fromHex("#30ff6a"),
--- })
+-- Main Tab Content
+local MainSection = Tabs.Main:Section({
+    Title = "W-Hub Features",
+    Icon = "star",
+    Opened = true,
+})
 
+MainSection:Paragraph({
+    Title = "Welcome to W-Hub!",
+    Desc = "Your ultimate Roblox utility hub with powerful features",
+    Color = Color3.fromHex("#30ff6a"),
+})
+
+MainSection:Button({
+    Title = "Teleport to Spawn",
+    Icon = "map-pin",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = CFrame.new(0, 10, 0)
+            WindUI:Notify({
+                Title = "Teleport",
+                Content = "Teleported to spawn!",
+                Icon = "map-pin"
+            })
+        end
+    end,
+})
+
+MainSection:Slider({
+    Title = "Walk Speed",
+    Min = 16,
+    Max = 200,
+    Value = 16,
+    Flag = "walkspeed",
+    Callback = function(value)
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = value
+        end
+    end,
+})
+
+MainSection:Toggle({
+    Title = "Player ESP",
+    Desc = "Show ESP for other players",
+    Value = false,
+    Flag = "esp",
+    Callback = function(state)
+        WindUI:Notify({
+            Title = "ESP",
+            Content = state and "ESP Enabled!" or "ESP Disabled!",
+            Icon = state and "eye" or "eye-off"
+        })
+    end,
+})
+
+-- Elements Tab Content
 Tabs.Elements:Section({
     Title = "Interactive Components",
     TextSize = 20,
@@ -255,7 +307,6 @@ Tabs.Elements:Section({
     TextSize = 16,
     TextTransparency = .25,
 })
-
 
 Tabs.Elements:Divider()
 
