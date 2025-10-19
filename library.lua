@@ -2889,14 +2889,14 @@ return{
 Dark={
 Name="Dark",
 
-Accent=Color3.fromHex"#050505",
-Dialog=Color3.fromHex"#080808",
-Outline=Color3.fromHex"#FFFFFF",
-Text=Color3.fromHex"#FFFFFF",
-Placeholder=Color3.fromHex"#404040",
-Background=Color3.fromHex"#030303",
-Button=Color3.fromHex"#2a2a2a",
-Icon=Color3.fromHex"#6a6a6a"
+Accent=Color3.fromHex"#1a1a1a",
+Dialog=Color3.fromHex"#151515",
+Outline=Color3.fromHex"#3a3a3a",
+Text=Color3.fromHex"#2a2a2a",
+Placeholder=Color3.fromHex"#303030",
+Background=Color3.fromHex"#0a0a0a",
+Button=Color3.fromHex"#1f1f1f",
+Icon=Color3.fromHex"#4a4a4a"
 },
 Light={
 Name="Light",
@@ -9575,7 +9575,7 @@ ai.NewRoundFrame(ar.UICorner-(ar.UIPadding/2),"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ImageColor3=Color3.new(1,1,1),
 ZIndex=3,
-ImageTransparency=0.25,
+ImageTransparency=0.5,
 Name="Background",
 Visible=not ar.HidePanelBackground
 }),
@@ -9888,23 +9888,7 @@ CornerRadius=UDim.new(0,ar.UICorner)
 end
 
 
-local e=ai.NewRoundFrame(99,"Squircle",{
-ImageTransparency=.8,
-ImageColor3=Color3.new(1,1,1),
-Size=UDim2.new(0,0,0,4),
-Position=UDim2.new(0.5,0,1,4),
-AnchorPoint=Vector2.new(0.5,0),
-},{
-aj("TextButton",{
-Size=UDim2.new(1,12,1,12),
-BackgroundTransparency=1,
-Position=UDim2.new(0.5,0,0.5,0),
-AnchorPoint=Vector2.new(0.5,0.5),
-Active=true,
-ZIndex=99,
-Name="Frame",
-})
-})
+-- Убрана полоса для перетаскивания
 
 function createAuthor(g)
 return aj("TextLabel",{
@@ -9956,7 +9940,7 @@ Active=true,
 ar.AcrylicPaint and ar.AcrylicPaint.Frame or nil,
 ay,
 ai.NewRoundFrame(ar.UICorner,"Squircle",{
-ImageTransparency=0.25,
+ImageTransparency=0.5,
 Size=UDim2.new(1,0,1,-240),
 AnchorPoint=Vector2.new(0.5,0.5),
 Position=UDim2.new(0.5,0,0.5,0),
@@ -9967,8 +9951,6 @@ ImageColor3="Background"
 
 },{
 aD,
-e,
-av,
 
 
 
@@ -10432,13 +10414,8 @@ end
 
 task.spawn(function()
 task.wait(.3)
-ak(e,.45,{Size=UDim2.new(0,200,0,4),ImageTransparency=.8},Enum.EasingStyle.Exponential,Enum.EasingDirection.Out):Play()
 j:Set(true)
 task.wait(.45)
-if ar.Resizable then
-ak(av.ImageLabel,.45,{ImageTransparency=.8},Enum.EasingStyle.Exponential,Enum.EasingDirection.Out):Play()
-ar.CanResize=true
-end
 end)
 
 
@@ -10497,8 +10474,6 @@ if UIStroke then
 ak(UIStroke,0.25,{Transparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 
-ak(e,.3,{Size=UDim2.new(0,0,0,4),ImageTransparency=1},Enum.EasingStyle.Exponential,Enum.EasingDirection.InOut):Play()
-ak(av.ImageLabel,.3,{ImageTransparency=1},Enum.EasingStyle.Exponential,Enum.EasingDirection.Out):Play()
 j:Set(false)
 ar.CanResize=false
 
@@ -11111,7 +11086,7 @@ NotificationModule=a.load'c',
 Themes=nil,
 Transparent=true,
 
-TransparencyValue=.25,
+TransparencyValue=.5,
 
 UIScale=1,
 
