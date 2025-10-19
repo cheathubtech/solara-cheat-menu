@@ -2889,14 +2889,14 @@ return{
 Dark={
 Name="Dark",
 
-Accent=Color3.fromHex"#0a0a0a",
-Dialog=Color3.fromHex"#0d0d0d",
+Accent=Color3.fromHex"#050505",
+Dialog=Color3.fromHex"#080808",
 Outline=Color3.fromHex"#FFFFFF",
 Text=Color3.fromHex"#FFFFFF",
-Placeholder=Color3.fromHex"#5a5a5a",
-Background=Color3.fromHex"#080808",
-Button=Color3.fromHex"#3a3a3a",
-Icon=Color3.fromHex"#8a8a8a"
+Placeholder=Color3.fromHex"#404040",
+Background=Color3.fromHex"#030303",
+Button=Color3.fromHex"#2a2a2a",
+Icon=Color3.fromHex"#6a6a6a"
 },
 Light={
 Name="Light",
@@ -9575,7 +9575,7 @@ ai.NewRoundFrame(ar.UICorner-(ar.UIPadding/2),"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ImageColor3=Color3.new(1,1,1),
 ZIndex=3,
-ImageTransparency=.95,
+ImageTransparency=0.25,
 Name="Background",
 Visible=not ar.HidePanelBackground
 }),
@@ -9956,7 +9956,7 @@ Active=true,
 ar.AcrylicPaint and ar.AcrylicPaint.Frame or nil,
 ay,
 ai.NewRoundFrame(ar.UICorner,"Squircle",{
-ImageTransparency=1,
+ImageTransparency=0.25,
 Size=UDim2.new(1,0,1,-240),
 AnchorPoint=Vector2.new(0.5,0.5),
 Position=UDim2.new(0.5,0,0.5,0),
